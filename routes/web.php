@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
+Route::get('/', [App\Http\Controllers\CustomerController::class, 'index']);
+
 Route::get('/customers', [App\Http\Controllers\CustomerController::class, 'index']);
 
 Route::post('/create', [App\Http\Controllers\CustomerController::class, 'addCustomer'])->name('customer.add');
