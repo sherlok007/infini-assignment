@@ -98,11 +98,20 @@ class CustomerController extends Controller
     }
 
     public function addCustomer(Request $request) {
+
+        $imageName = '';
+        if(!empty($request->file('profile_pic'))) {
+            $image = $request->file('profile_pic');
+            $imageName = time().'.'.$image->extension();
+            $image->move(public_path('images'), $imageName);
+        }
+
         $customer = new Customer();
         $customer->first_name = $request->first_name;
         $customer->last_name = $request->last_name;
         $customer->mobile = $request->mobile;
         $customer->email_address = $request->email_address;
+        $customer->profile_pic = $imageName;
         $customer->status = $request->status;
         $customer->source = $request->source;
         $customer->save();
@@ -117,11 +126,20 @@ class CustomerController extends Controller
     }
 
     public function updateCustomer(Request $request) {
+        $imageName = '';
+
+        if(!empty($request->file('profile_pic'))) {
+            $image = $request->file('profile_pic');
+            $imageName = time().'.'.$image->extension();
+            $image->move(public_path('images'), $imageName);
+        }
+
         $customer = Customer::find($request->id);
         $customer->first_name = $request->first_name;
         $customer->last_name = $request->last_name;
         $customer->mobile = $request->mobile;
         $customer->email_address = $request->email_address;
+        $customer->profile_pic = $imageName;
         $customer->status = $request->status;
         $customer->source = $request->source;
         $customer->save();

@@ -16,7 +16,6 @@ class CustomerObserver
      */
     public function created(Customer $customer)
     {
-
         if ($customer->id) {
             try {
                 $customer_history = new CustomerHistory();
@@ -24,6 +23,7 @@ class CustomerObserver
                 $customer_history->last_name = $customer->last_name;
                 $customer_history->mobile = $customer->mobile;
                 $customer_history->email_address = $customer->email_address;
+                $customer_history->profile_pic = $customer->profile_pic;
                 $customer_history->status = $customer->status;
                 $customer_history->source = $customer->source;
                 $customer_history->save();
@@ -47,6 +47,7 @@ class CustomerObserver
         $customer_history->last_name = $customer->last_name;
         $customer_history->mobile = $customer->mobile;
         $customer_history->email_address = $customer->email_address;
+        $customer_history->profile_pic = $customer->profile_pic;
         $customer_history->status = $customer->status;
         $customer_history->source = $customer->source;
         $customer_history->save();

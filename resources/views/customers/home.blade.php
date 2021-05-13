@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="id=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Infini</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -76,7 +77,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="customerForm">
+                    <form id="customerForm" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="row">
@@ -126,6 +127,14 @@
                                             <option value="{{$src->id}}">{{$src->name}}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input type="file" name="profile_pic" class="form-control" id="profile_pic">
+                                    <span class="text-danger" id="image-input-error"></span>
                                 </div>
                             </div>
                         </div>
@@ -205,6 +214,14 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input type="file" name="profile_pic_edit" class="form-control" id="profile_pic_edit">
+                                    <span class="text-danger" id="image-input-error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6">
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
@@ -217,26 +234,25 @@
     <script>
         $("#customerForm").submit(function(ev) {
             ev.preventDefault();
-            let first_name = $("#first_name").val();
-            let last_name = $("#last_name").val();
-            let mobile = $("#mobile").val();
-            let email_address = $("#email_address").val();
-            let status = $("#status").val();
-            let source = $("#source").val();
-            let _token = $("input[name=_token]").val();
+            let profile_pic = $("input[name=profile_pic]").prop('files')[0];
+            let form_data = new FormData();
+            form_data.append('first_name', $("#first_name").val());
+            form_data.append('last_name', $("#last_name").val());
+            form_data.append('mobile', $("#mobile").val());
+            form_data.append('email_address', $("#email_address").val());
+            form_data.append('profile_pic', profile_pic);
+            form_data.append('status', $("#status").val());
+            form_data.append('source', $("#source").val());
+            form_data.append('_token', $("input[name=_token]").val());
 
             $.ajax({
                 url: "{{ route('customer.add') }}",
                 type: "post",
-                data: {
-                    first_name: first_name,
-                    last_name: last_name,
-                    mobile: mobile,
-                    email_address: email_address,
-                    status: status,
-                    source: source,
-                    _token: _token
-                },
+                data: form_data,
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
                 success: function(resp) {
                     if (resp) {
                         $("#customerTable tbody").append('<tr><td>'+resp[0].first_name+'</td><td>'+resp[0].last_name+'</td><td>'+resp[0].mobile+'</td><td>'+resp[0].email_address+'</td><td>'+resp[0].stsname+'</td><td>'+resp[0].srcname+'</td><td><a href="javascript:void(0)" onclick="getCustomer('+ +resp[0].id +')" data-toggle="modal">Edit</a> | <a href="javascript:void(0)" onclick="deleteCustomer('+ +resp[0].id +')">Delete</a></td></tr>');
@@ -244,33 +260,37 @@
                         $("#customerModal").modal('hide');
                     }
                 }
-            });
-        });
+            })
+
+
+
+        })
 
         $("#customerEditForm").submit(function(ev) {
             ev.preventDefault();
-            let id = $("#id").val();
-            let first_name = $("#first_name_edit").val();
-            let last_name = $("#last_name_edit").val();
-            let mobile = $("#mobile_edit").val();
-            let email_address = $("#email_address_edit").val();
-            let status = $("#status_edit").val();
-            let source = $("#source_edit").val();
-            let _token = $("input[name=_token]").val();
+            let profile_pic = '';
+            if(typeof $("input[name=profile_pic_edit]").val() !== "undefined") {
+                profile_pic = $("input[name=profile_pic_edit]").prop('files')[0];
+            }
+            let form_data = new FormData();
+            form_data.append('id', $("#id").val());
+            form_data.append('first_name', $("#first_name_edit").val());
+            form_data.append('last_name', $("#last_name_edit").val());
+            form_data.append('mobile', $("#mobile_edit").val());
+            form_data.append('email_address', $("#email_address_edit").val());
+            form_data.append('profile_pic', profile_pic);
+            form_data.append('status', $("#status_edit").val());
+            form_data.append('source', $("#source_edit").val());
+            form_data.append('_token', $("input[name=_token]").val());
 
             $.ajax({
                 url: "{{ route('customer.update') }}",
                 type: "post",
-                data: {
-                    id: id,
-                    first_name: first_name,
-                    last_name: last_name,
-                    mobile: mobile,
-                    email_address: email_address,
-                    status: status,
-                    source: source,
-                    _token: _token
-                },
+                data: form_data,
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
                 success: function(resp) {
                     if (resp) {
                         $('#cid' + resp[0].id + ' td:nth-child(1)').text(resp[0].first_name);

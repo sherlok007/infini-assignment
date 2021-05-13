@@ -17,7 +17,7 @@ class Customer extends Model
     ];
 
     protected $table = "customers";
-    protected $fillable = ["first_name", "last_name", "mobile", "email_address", "status", "source"];
+    protected $fillable = ["first_name", "last_name", "mobile", "email_address", "profile_pic", "status", "source"];
 
     public static function getCustomer() {
         $records = DB::table('customers')
