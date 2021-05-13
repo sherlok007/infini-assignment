@@ -26,3 +26,7 @@ Route::get('/customers/{id}', [App\Http\Controllers\CustomerController::class, '
 Route::post('/update', [App\Http\Controllers\CustomerController::class, 'updateCustomer'])->name('customer.update');
 
 Route::delete('/customers/{id}', [App\Http\Controllers\CustomerController::class, 'deleteCustomer'])->name('customer.delete');
+
+Route::get('/export-excel', [App\Http\Controllers\CustomerController::class, 'exportToExcel'])->name('export.excel');
+
+Route::get('/export-csv', [App\Http\Controllers\CustomerController::class, 'exportToCSV'])->name('export.csv');

@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exports\CustomerExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+
 
 class CustomerController extends Controller
 {
@@ -147,5 +151,13 @@ class CustomerController extends Controller
     public function getCustomerById($id) {
         $customer = Customer::find($id);
         return response()->json($customer);
+    }
+
+    public function exportToExcel() {
+        return Excel::download(new CustomerExport, 'customerlist.xlsx');
+    }
+
+    public function exportToCSV() {
+        return Excel::download(new CustomerExport, 'customerlist.csv');
     }
 }

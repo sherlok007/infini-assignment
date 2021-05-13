@@ -18,6 +18,8 @@
                     <div class="card">
                         <div class="card-header">
                             Customers <a href="#" data-toggle="modal" data-target="#customerModal">Add New Customer</a>
+                            | <a href="{{ route('export.excel') }}">Export to Excel</a>
+                            | <a href="{{ route('export.csv') }}">Export to CSV</a>
                         </div>
                         <div class="card-body">
                             <table id="customerTable" class="table">
@@ -237,8 +239,7 @@
                 },
                 success: function(resp) {
                     if (resp) {
-                        console.log(resp);
-                        $("#customerTable tbody").append('<tr><td>'+resp[0].first_name+'</td><td>'+resp[0].last_name+'</td><td>'+resp[0].mobile+'</td><td>'+resp[0].email_address+'</td><td>'+resp[0].stsname+'</td><td>'+resp[0].srcname+'</td><td><a href="javascript:void(0)" onclick="getCustomer('+ +resp[0].id +')" data-toggle="modal">Edit</a></td></tr>');
+                        $("#customerTable tbody").append('<tr><td>'+resp[0].first_name+'</td><td>'+resp[0].last_name+'</td><td>'+resp[0].mobile+'</td><td>'+resp[0].email_address+'</td><td>'+resp[0].stsname+'</td><td>'+resp[0].srcname+'</td><td><a href="javascript:void(0)" onclick="getCustomer('+ +resp[0].id +')" data-toggle="modal">Edit</a> | <a href="javascript:void(0)" onclick="deleteCustomer('+ +resp[0].id +')">Delete</a></td></tr>');
                         $("#customerForm")[0].reset();
                         $("#customerModal").modal('hide');
                     }
