@@ -26,6 +26,7 @@
                             <table id="customerTable" class="table">
                                 <thead>
                                 <tr>
+                                    <th>Profile Image</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Phone</th>
@@ -38,6 +39,9 @@
                                 <tbody>
                                 @foreach($customers as $customer)
                                     <tr id="cid{{ $customer->id }}">
+                                        <td>
+                                            <img src="{{ url('/images/'.$customer->profile_pic) }}" width="50" alt="" />
+                                        </td>
                                         <td>{{ $customer->first_name }}</td>
                                         <td>{{ $customer->last_name }}</td>
                                         <td>{{ $customer->mobile }}</td>
@@ -255,15 +259,14 @@
                 processData: false,
                 success: function(resp) {
                     if (resp) {
-                        $("#customerTable tbody").append('<tr><td>'+resp[0].first_name+'</td><td>'+resp[0].last_name+'</td><td>'+resp[0].mobile+'</td><td>'+resp[0].email_address+'</td><td>'+resp[0].stsname+'</td><td>'+resp[0].srcname+'</td><td><a href="javascript:void(0)" onclick="getCustomer('+ +resp[0].id +')" data-toggle="modal">Edit</a> | <a href="javascript:void(0)" onclick="deleteCustomer('+ +resp[0].id +')">Delete</a></td></tr>');
+                        console.log(resp);
+                        let url = "{{ url('/images') }}/" + resp[0].profile_pic;
+                        $("#customerTable tbody").append('<tr><td><img src="'+ url + '" width="50" alt="" /></td><td>'+resp[0].first_name+'</td><td>'+resp[0].last_name+'</td><td>'+resp[0].mobile+'</td><td>'+resp[0].email_address+'</td><td>'+resp[0].stsname+'</td><td>'+resp[0].srcname+'</td><td><a href="javascript:void(0)" onclick="getCustomer('+ +resp[0].id +')" data-toggle="modal">Edit</a> | <a href="javascript:void(0)" onclick="deleteCustomer('+ +resp[0].id +')">Delete</a></td></tr>');
                         $("#customerForm")[0].reset();
                         $("#customerModal").modal('hide');
                     }
                 }
-            })
-
-
-
+            });
         })
 
         $("#customerEditForm").submit(function(ev) {
@@ -293,12 +296,14 @@
                 processData: false,
                 success: function(resp) {
                     if (resp) {
-                        $('#cid' + resp[0].id + ' td:nth-child(1)').text(resp[0].first_name);
-                        $('#cid' + resp[0].id + ' td:nth-child(2)').text(resp[0].last_name);
-                        $('#cid' + resp[0].id + ' td:nth-child(3)').text(resp[0].mobile);
-                        $('#cid' + resp[0].id + ' td:nth-child(4)').text(resp[0].email_address);
-                        $('#cid' + resp[0].id + ' td:nth-child(5)').text(resp[0].stsname);
-                        $('#cid' + resp[0].id + ' td:nth-child(6)').text(resp[0].srcname);
+                        console.log(resp);
+                        $('#cid' + resp[0].id + ' td:nth-child(1)').html(`<img src="{{ url('/images') }}/${resp[0].profile_pic}" width="50" alt="" />`);
+                        $('#cid' + resp[0].id + ' td:nth-child(2)').text(resp[0].first_name);
+                        $('#cid' + resp[0].id + ' td:nth-child(3)').text(resp[0].last_name);
+                        $('#cid' + resp[0].id + ' td:nth-child(4)').text(resp[0].mobile);
+                        $('#cid' + resp[0].id + ' td:nth-child(5)').text(resp[0].email_address);
+                        $('#cid' + resp[0].id + ' td:nth-child(6)').text(resp[0].stsname);
+                        $('#cid' + resp[0].id + ' td:nth-child(7)').text(resp[0].srcname);
                         $("#customerEditModal").modal('toggle');
                         $("#customerEditForm")[0].reset();
                     }
